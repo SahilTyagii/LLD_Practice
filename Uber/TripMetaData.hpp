@@ -9,10 +9,10 @@ class TripMetaData {
 private:
     Rating riderRating;
     Rating driverRating;
-    const Location srcLoc;
-    const Location destLoc;
+    const Location* srcLoc;
+    const Location* destLoc;
 public:
-    TripMetaData(Rating riderRating, Location srcLoc, Location destLoc): riderRating(riderRating), srcLoc(srcLoc), destLoc(destLoc) {}
+    TripMetaData(Rating riderRating, Location* srcLoc, Location* destLoc): riderRating(riderRating), srcLoc(srcLoc), destLoc(destLoc) {}
 
     void setDriverRating(Rating driverRating) {
         this->driverRating = driverRating;
