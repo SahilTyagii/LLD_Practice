@@ -1,4 +1,4 @@
-#pragma once;
+#pragma once
 
 #include "Trip.hpp"
 #include "TripMetaData.hpp"

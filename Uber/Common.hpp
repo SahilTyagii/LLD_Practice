@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <unordered_map>
+#include <sstream>
+#include <iomanip>
 #include "Location.hpp"
 
 using namespace std;
@@ -46,5 +48,10 @@ public:
     }
     static bool isHighRating(Rating rating) {
         return rating == Rating::FIVE_STAR || rating == Rating::FOUR_STAR;
+    }
+    static string formatId(int id) {
+        stringstream ss;
+        ss << setw(5) << setfill('0') << id;
+        return ss.str();
     }
 };

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "TripManager.hpp"
 using namespace std;
 

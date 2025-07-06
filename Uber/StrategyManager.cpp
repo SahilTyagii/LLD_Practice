@@ -1,5 +1,3 @@
-#pragma once
-
 #include "StrategyManager.hpp"
 using namespace std;
 

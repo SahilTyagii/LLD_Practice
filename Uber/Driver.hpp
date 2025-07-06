@@ -11,6 +11,9 @@ public:
     Driver(string name, Rating rating): User(name, rating) {
         isAvailable = false;
     }
+    string getUserType() const override {
+        return "Driver";
+    }
     void setAvailable(bool isAvailable) {
         this->isAvailable = isAvailable;
     }

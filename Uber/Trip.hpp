@@ -1,4 +1,4 @@
-#pragma once;
+#pragma once
 
 #include "Rider.hpp"
 #include "Driver.hpp"
@@ -31,7 +31,7 @@ public:
 
     void displayTripDetails() {
         cout << endl;
-        cout << "Trip id: " << tripId;
+        cout << "Trip id: " << tripId << endl;
         cout << "Rider: " << rider->getName() << endl;
         cout << "Driver: " << driver->getName() << endl;
         cout << "Price: $" << price << endl;
