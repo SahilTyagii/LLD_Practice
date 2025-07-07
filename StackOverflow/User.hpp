@@ -1,12 +1,8 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
-using namespace std;
-
-class Question;  // <-- forward declaration
-class Answer;
-class Comment;
+#include "Common.hpp"
+#include "Question.hpp"
+#include "Answer.hpp"
 
 class User {
 private:
