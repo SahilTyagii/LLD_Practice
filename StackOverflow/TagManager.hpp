@@ -11,8 +11,8 @@ private:
     static mutex mtx;
     TagManager() {}
 public:
-    TagManager* getTagManager();
+    static TagManager* getTagManager();
     void addTag(string name, Tag* tag);
-    unordered_map<string, Tag*> getTag();
+    unordered_map<string, Tag*> getTagMap();
     Tag* getTag(string name);
 };

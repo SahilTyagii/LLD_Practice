@@ -1,19 +1,24 @@
 #pragma once
+#include <string>
+using namespace std;
 
-#include "Commentable.hpp"
-#include "Votable.hpp"
-#include "Question.hpp"
+// Forward declarations
+class User;
+class Question;
 
-class Answer: public Commentable, Votable {
+class Answer: public Commentable, public Votable {
 private:
     int id;
+    static int nextId;
     string content;
     User* author;
     chrono::system_clock::time_point creationDate;
     Question* question;
     bool isAccepted;
 public:
-    Answer(string content, User* author, Question* question): content(content), author(author), question(question) {
+    Answer(string content, User* author, Question* question): id(nextId++), content(content), author(author), question(question) {
+        author->addAnswer(this);
+        question->addAnswer(this);
         creationDate = chrono::system_clock::now();
     }
     int getId() {
@@ -37,5 +42,11 @@ public:
     }
     void addComment(Comment* comment) override {
         commentMap[comment->getId()] = comment;
+    }
+    string getContent() {
+        return content;
+    }
+    User* getVoter() const override {
+        return author;
     }
 };

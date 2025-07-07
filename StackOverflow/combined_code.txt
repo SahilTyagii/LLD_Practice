@@ -1,0 +1,221 @@
+==== FILE: Answer.cpp ====
+#include "Answer.hpp"
+
+int Answer::nextId = 1;
+
+==== FILE: Comment.cpp ====
+#include "Comment.hpp"
+
+int Comment::nextId = 1;
+
+==== FILE: Question.cpp ====
+#include "Question.hpp"
+
+int Question::nextId = 1;
+
+==== FILE: QuestionManager.cpp ====
+#include "QuestionManager.hpp"
+
+QuestionManager* QuestionManager::questionManagerInstance = nullptr;
+mutex QuestionManager::mtx;
+
+QuestionManager* QuestionManager::getQuestionManager() {
+    if (questionManagerInstance == nullptr) {
+        mtx.lock();
+        if (questionManagerInstance == nullptr) {
+            questionManagerInstance = new QuestionManager();
+        }
+        mtx.unlock();
+    }
+    return questionManagerInstance;
+}
+
+unordered_map<int, Question*> QuestionManager::getQuestionMap() {
+    return questionMap;
+}
+
+Question* QuestionManager::getQuestion(int questionId) {
+    return questionMap[questionId];
+}
+
+void QuestionManager::addQuestion(int id, Question* question) {
+    questionMap[id] = question;
+}
+
+==== FILE: StackOverflow.cpp ====
+#include "UserManager.hpp"
+#include "QuestionManager.hpp"
+#include "TagManager.hpp"
+#include "Common.hpp"
+
+int main() {
+    UserManager* userManager = UserManager::getUserManager();
+    QuestionManager* questionManager = QuestionManager::getQuestionManager();
+    TagManager* tagManager = TagManager::getTagManager();
+
+    User* sahil = new User("Sahil Tyagi", "tyagi28sahil@gmail.com");
+    User* punisher = new User("Frank Castle", "realpunisher@gmail.com");
+    User* billy = new User("Billy Russo", "russobilly@gmail.com");
+
+    Question* howToReload = new Question("How to reload a Magnum 400?", sahil);
+    questionManager->addQuestion(howToReload->getId(), howToReload);
+
+    Answer* howToReloadAnswer = new Answer("Search on youtube!", punisher, howToReload);
+    Comment* commentToSahil = new Comment(howToReload, billy, "Why do you need to know that!?");
+    Comment* commentToPunisher = new Comment(howToReloadAnswer, billy, "sybau");
+
+    Vote* upVote = new Vote(howToReload, billy, 1);
+    Vote* downVote = new Vote(howToReloadAnswer, billy, -1);
+
+    Tag* tag1 = new Tag("Gun");
+    Tag* tag2 = new Tag("Punisher");
+    Tag* tag3 = new Tag("Daredevil");
+    
+    tagManager->addTag(tag1->getName(), tag1);
+    tag1->addQuestion(howToReload);
+
+    tagManager->addTag(tag2->getName(), tag2);
+    tag2->addQuestion(howToReload);
+
+    tagManager->addTag(tag2->getName(), tag2);
+    tag2->addQuestion(howToReload);
+
+    sahil->printDetails();
+    punisher->printDetails();
+    billy->printDetails();
+
+    return 0;
+}
+
+==== FILE: Tag.cpp ====
+#include "Tag.hpp"
+
+int Tag::nextId = 1;
+
+==== FILE: TagManager.cpp ====
+#include "TagManager.hpp"
+
+TagManager* TagManager::tagManagerInstance = nullptr;
+mutex TagManager::mtx;
+
+TagManager* TagManager::getTagManager() {
+    if (tagManagerInstance == nullptr) {
+        mtx.lock();
+        if (tagManagerInstance == nullptr) {
+            tagManagerInstance = new TagManager();
+        }
+        mtx.unlock();
+    }
+    return tagManagerInstance;
+}
+
+unordered_map<string, Tag*> TagManager::getTagMap() {
+    return tagsMap;
+}
+
+Tag* TagManager::getTag(string tagName) {
+    return tagsMap[tagName];
+}
+
+void TagManager::addTag(string tagName, Tag* tag) {
+    tagsMap[tagName] = tag;
+}
+
+==== FILE: User.cpp ====
+#include "User.hpp"
+#include "Common.hpp"
+#include "Question.hpp"
+#include "Answer.hpp"
+#include "Comment.hpp"
+
+int User::nextId = 1;
+
+User::User(string username, string email): id(nextId++), username(username), email(email) {
+    reputation = 0;
+}
+
+void User::addQuestion(Question* q) {
+    questions[q->getId()] = q;
+}
+
+void User::addAnswer(Answer* a) {
+    answers[a->getId()] = a;
+}
+
+void User::addComment(Comment* c) {
+    comments[c->getId()] = c;
+}
+
+int User::getId() {
+    return id;
+}
+
+unordered_map<int, Question*> User::getQuestions() {
+    return questions;
+}
+
+unordered_map<int, Answer*> User::getAnswers() {
+    return answers;
+}
+
+unordered_map<int, Comment*> User::getComments() {
+    return comments;
+}
+
+void User::printDetails() {
+    cout << "\n\n";
+    cout << "Username: " << username << endl;
+    cout << "Email: " << email << endl;
+    cout << "Reputation: " << reputation << endl;
+    cout << "Questions Posted: " << endl;
+    for (auto& [id, question]: questions) {
+        cout << "\t" << id << ") " << question->getContent() << endl;
+    }
+    cout << "Answers Posted: " << endl;
+    for (auto& [id, answer]: answers) {
+        cout << "\t" << id << ") " << answer->getContent() << endl;
+    }
+    cout << "Comments Posted: " << endl;
+    for (auto& [id, comment]: comments) {
+        cout << "\t" << id << ") " << comment->getContent() << endl;
+    }
+    cout << "\n\n";
+}
+
+int User::getReputation() {
+    return reputation;
+}
+
+void User::addReputation(int value) {
+    reputation += value;
+}
+
+==== FILE: UserManager.cpp ====
+#include "UserManager.hpp"
+
+UserManager* UserManager::userManagerInstance = nullptr;
+mutex UserManager::mtx;
+
+UserManager* UserManager::getUserManager() {
+    if (userManagerInstance == nullptr) {
+        mtx.lock();
+        if (userManagerInstance == nullptr) {
+            userManagerInstance = new UserManager();
+        }
+        mtx.unlock();
+    }
+    return userManagerInstance;
+}
+
+void UserManager::addUser(User* user) {
+    userMap[user->getId()] = user;
+}
+
+unordered_map<int, User*> UserManager::getUserMap() {
+    return userMap;
+}
+
+==== FILE: Vote.cpp ====
+#include "Vote.hpp"
+
+int Vote::nextId = 1;

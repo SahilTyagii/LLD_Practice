@@ -9,4 +9,5 @@ protected:
 public:
     virtual int getVoteCount() const = 0;
     virtual void addVote(Vote*) = 0;
+    virtual User* getVoter() const = 0;
 };

@@ -14,7 +14,7 @@ TagManager* TagManager::getTagManager() {
     return tagManagerInstance;
 }
 
-unordered_map<string, Tag*> TagManager::getTag() {
+unordered_map<string, Tag*> TagManager::getTagMap() {
     return tagsMap;
 }
 

@@ -6,14 +6,16 @@
 #include "Votable.hpp"
 #include "User.hpp"
 
-class Question: public Answerable, Commentable, Taggable, Votable {
+class Question: public Answerable, public Commentable, public Taggable, public Votable {
 private:
     int id;
+    static int nextId;
     string content;
     User* author;
     chrono::system_clock::time_point creationDate;
 public:
-    Question(string content, User* author): id(id), content(content), author(author) {
+    Question(string content, User* author): id(nextId++), content(content), author(author) {
+        author->addQuestion(this);
         creationDate = chrono::system_clock::now();
     }
     int getId() {
@@ -46,5 +48,11 @@ public:
     }
     void addComment(Comment* comment) override {
         commentMap[comment->getId()] = comment;
+    }
+    string getContent() {
+        return content;
+    }
+    User* getVoter() const override {
+        return author;
     }
 };
